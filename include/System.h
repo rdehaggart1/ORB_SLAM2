@@ -46,6 +46,7 @@ class Map;
 class Tracking;
 class LocalMapping;
 class LoopClosing;
+class VisibilityEstimator;
 
 class System
 {
@@ -151,15 +152,19 @@ private:
 
     // The viewer draws the map and the current camera pose. It uses Pangolin.
     Viewer* mpViewer;
+    
+    // The visibility estimator uses the extracted points to estimate how visibile the scene is to the camera
+    VisibilityEstimator* mpVisibilityEstimator;
 
     FrameDrawer* mpFrameDrawer;
     MapDrawer* mpMapDrawer;
 
-    // System threads: Local Mapping, Loop Closing, Viewer.
+    // System threads: Local Mapping, Loop Closing, Viewer, Visibility Estimator
     // The Tracking thread "lives" in the main execution thread that creates the System object.
     std::thread* mptLocalMapping;
     std::thread* mptLoopClosing;
     std::thread* mptViewer;
+    std::thread* mptVisibilityEstimator;
 
     // Reset flag
     std::mutex mMutexReset;
