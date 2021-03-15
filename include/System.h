@@ -35,6 +35,7 @@
 #include "KeyFrameDatabase.h"
 #include "ORBVocabulary.h"
 #include "Viewer.h"
+#include "VisibilityEstimator.h"
 #include <unistd.h>
 
 namespace ORB_SLAM2

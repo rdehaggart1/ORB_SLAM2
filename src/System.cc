@@ -103,7 +103,7 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     }
     
     //Initialise the visibility estimator thread and launch
-    mpVisibilityEstimator = VisibilityEstimator(this, mpFrameDrawer, mpMapDrawer, mpTracker, strSettingsFile);
+    mpVisibilityEstimator = new VisibilityEstimator(this, mpFrameDrawer, mpMapDrawer, mpTracker, strSettingsFile);
     mptVisibilityEstimator = new thread(&VisibilityEstimator::Run, mpVisibilityEstimator);
 
     //Set pointers between threads
@@ -309,6 +309,7 @@ void System::Shutdown()
 {
     mpLocalMapper->RequestFinish();
     mpLoopCloser->RequestFinish();
+    mpVisibilityEstimator->RequestFinish();
     if(mpViewer)
     {
         mpViewer->RequestFinish();

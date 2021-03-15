@@ -49,10 +49,10 @@ VisibilityEstimator::VisibilityEstimator(System* pSystem, FrameDrawer *pFrameDra
     mViewpointZ = fSettings["Viewer.ViewpointZ"];
     mViewpointF = fSettings["Viewer.ViewpointF"];
 
-    nRequestedMapPoints = fsettings["ORBextractor.nFeatures"];
+    nRequestedMapPoints = fSettings["ORBextractor.nFeatures"];
 }
 
-void Viewer::Run()
+void VisibilityEstimator::Run()
 {
     mbFinished = false;
     mbStopped = false;
