@@ -63,6 +63,9 @@ public:
     int inline GetLevels(){
         return nlevels;}
 
+    int inline Getnfeatures(){
+        return nfeatures;}
+
     float inline GetScaleFactor(){
         return scaleFactor;}
 
