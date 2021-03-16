@@ -46,10 +46,13 @@ public:
     // Main thread function. Calculate the overall visibility estimation
     void Run();
 
-    int inline getnRequestedMapPoints(){
+    int inline GetnRequestedMapPoints(){
         return nRequestedMapPoints;}
 
-    int inline getnMapPoints(){
+    int inline GetnMaximumMapPoints(){
+        return nMaximumMapPoints;}
+
+    int inline GetnMapPoints(){
         return nMapPoints;}
 
     void RequestFinish();
@@ -78,6 +81,8 @@ private:
     float mViewpointX, mViewpointY, mViewpointZ, mViewpointF;
 
     int nRequestedMapPoints;   // how many ORB features did the user ask for per frame?
+    int nMaximumMapPoints;     // and how many are we looking to extract per frame 
+                                    // included since monocular initialisation bumps nMapPoints limit up to 2x the defined amount
     int nMapPoints;            // and how many have actually been extracted?
 
     bool CheckFinish();

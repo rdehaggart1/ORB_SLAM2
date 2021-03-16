@@ -19,6 +19,7 @@
 */
 
 #include "VisibilityEstimator.h"
+#include "ORBextractor.h"
 
 #include <mutex>
 
@@ -61,7 +62,7 @@ void VisibilityEstimator::Run()
     {
 
         nMapPoints = mpTracker->mCurrentFrame.N;        
-        // if we want to account for initialisation in maximum N: mpTracker->mCurrentFrame.mpORBextractorLeft->Getnfeatures();
+        nMaximumMapPoints = mpTracker->mCurrentFrame.mpORBextractorLeft->GetLevels();
 
         if(Stop())
         {
