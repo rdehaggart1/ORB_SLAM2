@@ -265,7 +265,7 @@ cv::Mat System::TrackMonocular(const cv::Mat &im, const double &timestamp)
     mTrackedKeyPointsUn = mpTracker->mCurrentFrame.mvKeysUn;
     
     // <VIS> *temp* print to console the number of extracted map points
-    //cout << mpVisibilityEstimator->GetnMapPoints() << " map points of " << mpVisibilityEstimator->GetnRequestedMapPoints; << endl;
+    cout << mpTracker->mCurrentFrame.N << " map points of " << mpTracker->mCurrentFrame.mpORBextractorLeft->Getnfeatures() << " (" << mpTracker->mCurrentFrame.SVE_a << ")" << endl;
 
     return Tcw;
 }

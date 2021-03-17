@@ -133,6 +133,12 @@ public:
     // Maximum number of KeyPoints
     int NMax;
 
+    //<SVE> Scene Visibility Estimation
+    int n_requestedFeatures;
+    float SVE_a;
+    float SVE_b;
+    float SVE_c; 
+
     // Vector of keypoints (original for visualization) and undistorted (actually used by the system).
     // In the stereo case, mvKeysUn is redundant as images must be rectified.
     // In the RGB-D case, RGB images can be distorted.

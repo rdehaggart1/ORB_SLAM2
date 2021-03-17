@@ -223,6 +223,17 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
 
     mb = mbf/fx;
 
+    /* <SVE> SCENE VISIBILITY ESTIMATION */
+    // for every frame, we would like to know how visible the scene is. this can be based on a set of metrics relating to the extracted features
+    
+    // a: how many points have been extracted relative to the requested number?
+    n_requestedFeatures = mpORBextractorLeft->Getnfeatures();   // this should be calculated every time as it is double the request during initialisation
+    SVE_a = N / float(mpORBextractorLeft->Getnfeatures());      // a is simply the ratio between the actual # of points and the 'maximum' # of points
+
+    // b: how well distributed are these points in the frame?
+
+    // c: how many of these points have been tracked (i.e. belong to the local map)?
+
     AssignFeaturesToGrid();
 }
 
