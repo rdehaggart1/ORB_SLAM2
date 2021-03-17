@@ -1,6 +1,6 @@
 echo "Building ROS nodes"
 
-cd Examples/ROS/ORB_SLAM2_withVisibilityEstimation
+cd Examples/ROS/ORB_SLAM2_SVE
 mkdir build
 cd build
 cmake .. -DROS_BUILD_TYPE=Release
