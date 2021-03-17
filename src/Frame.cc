@@ -72,7 +72,7 @@ Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeSt
     mvScaleFactors = mpORBextractorLeft->GetScaleFactors();
     mvInvScaleFactors = mpORBextractorLeft->GetInverseScaleFactors();
     mvLevelSigma2 = mpORBextractorLeft->GetScaleSigmaSquares();
-    mvInvLevelSigma2 = mpORBextractorLeft->GetInverseScaleSigmaSquares();
+    mvInvLevelSigma2 = mpORBextractorLeft->GetInverseScaleSigmaSquares();   
 
     // ORB extraction
     thread threadLeft(&Frame::ExtractORB,this,0,imLeft);
@@ -80,7 +80,7 @@ Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeSt
     threadLeft.join();
     threadRight.join();
 
-    N = mvKeys.size();
+    N = mvKeys.size();  // get the number of extracted features
 
     if(mvKeys.empty())
         return;
@@ -91,7 +91,6 @@ Frame::Frame(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timeSt
 
     mvpMapPoints = vector<MapPoint*>(N,static_cast<MapPoint*>(NULL));    
     mvbOutlier = vector<bool>(N,false);
-
 
     // This is done only for the first Frame (or after a change in the calibration)
     if(mbInitialComputations)

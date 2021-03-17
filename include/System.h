@@ -35,7 +35,7 @@
 #include "KeyFrameDatabase.h"
 #include "ORBVocabulary.h"
 #include "Viewer.h"
-#include "VisibilityEstimator.h"
+
 #include <unistd.h>
 
 namespace ORB_SLAM2
@@ -47,7 +47,6 @@ class Map;
 class Tracking;
 class LocalMapping;
 class LoopClosing;
-class VisibilityEstimator;
 
 class System
 {
@@ -153,9 +152,6 @@ private:
 
     // The viewer draws the map and the current camera pose. It uses Pangolin.
     Viewer* mpViewer;
-    
-    // The visibility estimator uses the extracted points to estimate how visibile the scene is to the camera
-    VisibilityEstimator* mpVisibilityEstimator;
 
     FrameDrawer* mpFrameDrawer;
     MapDrawer* mpMapDrawer;
@@ -165,7 +161,6 @@ private:
     std::thread* mptLocalMapping;
     std::thread* mptLoopClosing;
     std::thread* mptViewer;
-    std::thread* mptVisibilityEstimator;
 
     // Reset flag
     std::mutex mMutexReset;

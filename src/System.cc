@@ -101,10 +101,6 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
         mptViewer = new thread(&Viewer::Run, mpViewer);
         mpTracker->SetViewer(mpViewer);
     }
-    
-    // <VIS> Initialise the visibility estimator thread and launch
-    mpVisibilityEstimator = new VisibilityEstimator(this, mpFrameDrawer, mpMapDrawer, mpTracker, strSettingsFile);
-    mptVisibilityEstimator = new thread(&VisibilityEstimator::Run, mpVisibilityEstimator);
 
     //Set pointers between threads
     mpTracker->SetLocalMapper(mpLocalMapper);
@@ -269,7 +265,7 @@ cv::Mat System::TrackMonocular(const cv::Mat &im, const double &timestamp)
     mTrackedKeyPointsUn = mpTracker->mCurrentFrame.mvKeysUn;
     
     // <VIS> *temp* print to console the number of extracted map points
-    cout << mpVisibilityEstimator->GetnMapPoints() << " map points of " << mpVisibilityEstimator->GetnMaximumMapPoints() << endl;
+    //cout << mpVisibilityEstimator->GetnMapPoints() << " map points of " << mpVisibilityEstimator->GetnRequestedMapPoints; << endl;
 
     return Tcw;
 }
@@ -309,7 +305,7 @@ void System::Shutdown()
 {
     mpLocalMapper->RequestFinish();
     mpLoopCloser->RequestFinish();
-    mpVisibilityEstimator->RequestFinish();
+
     if(mpViewer)
     {
         mpViewer->RequestFinish();
