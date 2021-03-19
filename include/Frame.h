@@ -130,8 +130,6 @@ public:
 
     // Number of KeyPoints.
     int N;
-    // Maximum number of KeyPoints
-    int NMax;
 
     //<SVE> Scene Visibility Estimation
     int n_requestedFeatures;

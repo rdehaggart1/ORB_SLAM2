@@ -267,6 +267,8 @@ cv::Mat System::TrackMonocular(const cv::Mat &im, const double &timestamp)
     // <VIS> *temp* print to console the number of extracted map points
     cout << mpTracker->mCurrentFrame.N << " map points of " << mpTracker->mCurrentFrame.mpORBextractorLeft->Getnfeatures() << " (" << mpTracker->mCurrentFrame.SVE_a << ")" << endl;
 
+    cout << mpTracker->mCurrentFrame.SVE_b << endl;
+
     return Tcw;
 }
 

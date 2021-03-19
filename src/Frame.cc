@@ -231,7 +231,10 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
     SVE_a = N / float(mpORBextractorLeft->Getnfeatures());      // a is simply the ratio between the actual # of points and the 'maximum' # of points
 
     // b: how well distributed are these points in the frame?
-
+        //TODO: check if points are in grid
+        //TODO: divide image into grid and count num points in each square (faster than ^2 operations and more reliable for symmetric occlusion)
+    SVE_b = mvKeysUn[0].pt.x;   // this is how to access the x/y coords of the undistorted points.
+    
     // c: how many of these points have been tracked (i.e. belong to the local map)?
 
     AssignFeaturesToGrid();
