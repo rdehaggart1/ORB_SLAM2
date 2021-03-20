@@ -231,10 +231,13 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
     SVE_a = N / float(mpORBextractorLeft->Getnfeatures());      // a is simply the ratio between the actual # of points and the 'maximum' # of points
 
     // b: how well distributed are these points in the frame?
-        //TODO: check if points are in grid
         //TODO: divide image into grid and count num points in each square (faster than ^2 operations and more reliable for symmetric occlusion)
+            // Note that 'assignfeaturestogrid() already divides the image into grid squares so we can piggyback and count points in each square
+            // within that function
+        //TODO: how can we now process the number of points in each square to give us meaningful distribution info?
     SVE_b = mvKeysUn[0].pt.x;   // this is how to access the x/y coords of the undistorted points.
-    
+
+
     // c: how many of these points have been tracked (i.e. belong to the local map)?
 
     AssignFeaturesToGrid();
@@ -246,14 +249,23 @@ void Frame::AssignFeaturesToGrid()
     for(unsigned int i=0; i<FRAME_GRID_COLS;i++)
         for (unsigned int j=0; j<FRAME_GRID_ROWS;j++)
             mGrid[i][j].reserve(nReserve);
+    
+    // <SVE> declare a binning array where we can count how many points are in each grid square in the image
+    int gridBin[FRAME_GRID_COLS * FRAME_GRID_ROWS] = {0};
 
     for(int i=0;i<N;i++)
     {
         const cv::KeyPoint &kp = mvKeysUn[i];
 
         int nGridPosX, nGridPosY;
-        if(PosInGrid(kp,nGridPosX,nGridPosY))
+        if(PosInGrid(kp,nGridPosX,nGridPosY)){
+
+            // <SVE> find the index of this square (i.e. 0,0 is square 0, 2,1 is square (numCols * 2 + 1), etc.)
+            int squareIdx = (nGridPosY * FRAME_GRID_COLS) + nGridPosX;
+            gridBin[squareIdx]++;   // then bin the points by square index so we know how many points are in each grid square            
+
             mGrid[nGridPosX][nGridPosY].push_back(i);
+        }
     }
 }
 
