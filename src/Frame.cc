@@ -235,8 +235,7 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
             // Note that 'assignfeaturestogrid() already divides the image into grid squares so we can piggyback and count points in each square
             // within that function
         //TODO: how can we now process the number of points in each square to give us meaningful distribution info?
-    SVE_b = mvKeysUn[0].pt.x;   // this is how to access the x/y coords of the undistorted points.
-
+    // b is contained in 'AssignFeaturesToGrid()'
 
     // c: how many of these points have been tracked (i.e. belong to the local map)?
 
@@ -250,8 +249,14 @@ void Frame::AssignFeaturesToGrid()
         for (unsigned int j=0; j<FRAME_GRID_ROWS;j++)
             mGrid[i][j].reserve(nReserve);
     
-    // <SVE> declare a binning array where we can count how many points are in each grid square in the image
-    int gridBin[FRAME_GRID_COLS * FRAME_GRID_ROWS] = {0};
+    /* ---------- <SVE> ---------- */
+    // declare a binning array where we can count how many points are in each grid square in the image
+    // the grid that original is using is very fine (~3000 squares), and we'd probably get 1 or 2 points per grid square
+    // if we make the grid less fine, the efficiency should improve for the SVE part
+    int reductionFactor = 4;                                // reduce the number of rows from FRAME_GRID_ROWS to reductionFactor, same for cols
+    int SVEGridSquares = reductionFactor * reductionFactor; // so we now have a grid of reductionFactor*reductionFactor squares
+    int gridBin[SVEGridSquares] = {0};                      // this is our binning array
+    /* ---------------------------*/    
 
     for(int i=0;i<N;i++)
     {
@@ -260,13 +265,39 @@ void Frame::AssignFeaturesToGrid()
         int nGridPosX, nGridPosY;
         if(PosInGrid(kp,nGridPosX,nGridPosY)){
 
-            // <SVE> find the index of this square (i.e. 0,0 is square 0, 2,1 is square (numCols * 2 + 1), etc.)
-            int squareIdx = (nGridPosY * FRAME_GRID_COLS) + nGridPosX;
-            gridBin[squareIdx]++;   // then bin the points by square index so we know how many points are in each grid square            
+            /* ---------- <SVE> ---------- */ 
+            // <SVE> convert from fine grid col # and row # to new grid versions
+            // the column # in the fine grid is nGridPosX. divide by the length of each new square & cast to int will give new square
+            int largeGridPosX = nGridPosX / (FRAME_GRID_COLS/reductionFactor);
+            int largeGridPosY = nGridPosY / (FRAME_GRID_ROWS/reductionFactor);
+
+            // find the index of this square (i.e. 0,0 is square 0, 2,1 is square (numCols * 2 + 1), etc.) based on the reduction
+            int squareIdx = (largeGridPosY * reductionFactor) + largeGridPosX;
+            // then bin the points by square index so we know how many points are in each grid square        
+            gridBin[squareIdx]++;       
+            /* ---------------------------*/ 
 
             mGrid[nGridPosX][nGridPosY].push_back(i);
         }
     }
+
+
+    /* ---------- <SVE> ---------- */
+    // chi-squared 'goodness of fit' test
+    // we expect a uniform distribution (i.e. same number of points in all grid squares)
+    float expectedPoints = float(N) / float(SVEGridSquares);
+    float chiSquared = 0;
+    
+    // the best chi-squared value is 0 (distribution fits perfectly with expectation)
+    // the worst chi-squared value corresponds to every bin empty, except for 1 that contains all the points
+    float worstCase = (expectedPoints * (SVEGridSquares - 1)) + ((float(N) - expectedPoints) * (float(N) - expectedPoints)) / (expectedPoints);
+
+    for(int i=0;i<SVEGridSquares;i++){
+        chiSquared += ((gridBin[i] - expectedPoints)*(gridBin[i] - expectedPoints))/expectedPoints;  
+    }
+
+    SVE_b = 1- (chiSquared/worstCase);
+    /* ---------------------------*/ 
 }
 
 void Frame::ExtractORB(int flag, const cv::Mat &im)
