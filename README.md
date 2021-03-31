@@ -1,5 +1,5 @@
 # ORB-SLAM2 SVE
-ORB-SLAM2 SVE (or ORB-SLAM2 with Scene Visbility Estimation) is a modified version of the original ORB-SLAM2 SLAM framework. The original GitHub repository is located here: [https://github.com/raulmur/ORB_SLAM2](https://github.com/raulmur/ORB_SLAM2). 
+ORB-SLAM2 SVE (or ORB-SLAM2 with Scene Visbility Estimation) is a modified version of the original ORB-SLAM2 SLAM framework. The original GitHub repository is located [here](https://github.com/raulmur/ORB_SLAM2). 
 
 The modifications were made in support of my final year research project in partial fulfilment of my degree at the University of Sheffield. The research project is titled 'Online Scene Visibility Estimation as a Complement for SLAM in UAVs', and can be found here.
 
