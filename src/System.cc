@@ -267,10 +267,10 @@ cv::Mat System::TrackMonocular(const cv::Mat &im, const double &timestamp)
     // <SVE> *temp* print to console the number of extracted map points
     cout << mpTracker->mCurrentFrame.N << " map points of " << mpTracker->mCurrentFrame.mpORBextractorLeft->Getnfeatures() << " (" << mpTracker->mCurrentFrame.SVE_a << ", " << mpTracker->mCurrentFrame.SVE_b << ", " << mpTracker->mCurrentFrame.SVE_c << ")" << endl;
 
-    vSVE_t.push_back(mpTracker->mCurrentFrame.mTimeStamp);  
-    vSVE[0].push_back(mpTracker->mCurrentFrame.SVE_a);
-    vSVE[1].push_back(mpTracker->mCurrentFrame.SVE_b);
-    vSVE[2].push_back(mpTracker->mCurrentFrame.SVE_c);  
+    vSVE_t.push_back(mpTracker->mCurrentFrame.mTimeStamp); 
+    
+    std::vector<float> newRow = {mpTracker->mCurrentFrame.SVE_a, mpTracker->mCurrentFrame.SVE_b, mpTracker->mCurrentFrame.SVE_c};
+    vSVE.push_back(newRow);
 
     return Tcw;
 }

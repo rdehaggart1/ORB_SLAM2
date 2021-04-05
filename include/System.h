@@ -142,7 +142,7 @@ private:
     Map* mpMap;
 
     // <SVE> vectors for all SVE statistics
-    std::vector<vector<float>> vSVE;
+    std::vector<std::vector<float>> vSVE;
     std::vector<double> vSVE_t;
 
     // Tracker. It receives a frame and computes the associated camera pose.
