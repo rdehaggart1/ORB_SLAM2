@@ -500,19 +500,20 @@ vector<cv::KeyPoint> System::GetTrackedKeyPointsUn()
 
 void System::SaveVisibilityStatistics(const string &filename)
 {
-    cout << endl << "Saving visibility statistics to " << filename << " ..." << endl;
-    
-    vector<double> timestamps = vSVE_t;    
+    cout << endl << "Saving visibility statistics to " << filename << " ..." << endl;   
 
     ofstream f;
     f.open(filename.c_str());
     f << fixed;
 
-    for(size_t i=0; i<timestamps.size(); i++)
+    for(size_t i=0; i<vSVE_t.size(); i++)
     {
-        double timestamp = timestamps[i];
+        double timestamp = vSVE_t[i];
+        float SVE_a = vSVE[i][0];
+        float SVE_b = vSVE[i][1];
+        float SVE_c = vSVE[i][2];
 
-        f << setprecision(6) << timestamp << endl;
+        f << setprecision(6) << timestamp << " " << setprecision(6) << SVE_a << " " << setprecision(6) << SVE_b << " " << setprecision(6) << SVE_c << endl;
 
     }
 
