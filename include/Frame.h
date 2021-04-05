@@ -22,6 +22,7 @@
 #define FRAME_H
 
 #include<vector>
+#include <algorithm>
 
 #include "MapPoint.h"
 #include "Thirdparty/DBoW2/DBoW2/BowVector.h"
@@ -136,6 +137,7 @@ public:
     float SVE_a;
     float SVE_b;
     float SVE_c; 
+    int n_trackedPoints;
 
     // Vector of keypoints (original for visualization) and undistorted (actually used by the system).
     // In the stereo case, mvKeysUn is redundant as images must be rectified.

@@ -961,6 +961,9 @@ bool Tracking::TrackLocalMap()
 
         }
     }
+    
+    // <SVE> tell the frame how many points it is tracking from the local map relative to how many features it has extracted in total
+    mCurrentFrame.SVE_c = float(mnMatchesInliers)/float(mCurrentFrame.N);
 
     // Decide if the tracking was succesful
     // More restrictive if there was a relocalization recently

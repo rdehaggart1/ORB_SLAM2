@@ -267,6 +267,11 @@ cv::Mat System::TrackMonocular(const cv::Mat &im, const double &timestamp)
     // <SVE> *temp* print to console the number of extracted map points
     cout << mpTracker->mCurrentFrame.N << " map points of " << mpTracker->mCurrentFrame.mpORBextractorLeft->Getnfeatures() << " (" << mpTracker->mCurrentFrame.SVE_a << ", " << mpTracker->mCurrentFrame.SVE_b << ", " << mpTracker->mCurrentFrame.SVE_c << ")" << endl;
 
+    vSVE_t.push_back(mpTracker->mCurrentFrame.mTimeStamp);  
+    vSVE[0].push_back(mpTracker->mCurrentFrame.SVE_a);
+    vSVE[1].push_back(mpTracker->mCurrentFrame.SVE_b);
+    vSVE[2].push_back(mpTracker->mCurrentFrame.SVE_c);  
+
     return Tcw;
 }
 
@@ -491,6 +496,28 @@ vector<cv::KeyPoint> System::GetTrackedKeyPointsUn()
 {
     unique_lock<mutex> lock(mMutexState);
     return mTrackedKeyPointsUn;
+}
+
+void System::SaveVisibilityStatistics(const string &filename)
+{
+    cout << endl << "Saving visibility statistics to " << filename << " ..." << endl;
+    
+    vector<double> timestamps = vSVE_t;    
+
+    ofstream f;
+    f.open(filename.c_str());
+    f << fixed;
+
+    for(size_t i=0; i<timestamps.size(); i++)
+    {
+        double timestamp = timestamps[i];
+
+        f << setprecision(6) << timestamp << endl;
+
+    }
+
+    f.close();
+    cout << endl << "SVE stats saved!" << endl;
 }
 
 } //namespace ORB_SLAM

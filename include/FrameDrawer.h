@@ -47,6 +47,11 @@ public:
 
     // Draw last processed frame.
     cv::Mat DrawFrame();
+    
+    // <SVE> return the number of tracked map points to find out how many features are new
+    inline int get_mnTracked(){
+        return mnTracked;
+    }  
 
 protected:
 
