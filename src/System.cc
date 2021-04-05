@@ -266,11 +266,20 @@ cv::Mat System::TrackMonocular(const cv::Mat &im, const double &timestamp)
     
     // <SVE> *temp* print to console the number of extracted map points
     cout << mpTracker->mCurrentFrame.N << " map points of " << mpTracker->mCurrentFrame.mpORBextractorLeft->Getnfeatures() << " (" << mpTracker->mCurrentFrame.SVE_a << ", " << mpTracker->mCurrentFrame.SVE_b << ", " << mpTracker->mCurrentFrame.SVE_c << ")" << endl;
-
+    
+    /* ---------- <SVE> ---------- */
+    // store all timestamps of visibility measurements in vSVE_t
     vSVE_t.push_back(mpTracker->mCurrentFrame.mTimeStamp); 
     
-    std::vector<float> newRow = {mpTracker->mCurrentFrame.SVE_a, mpTracker->mCurrentFrame.SVE_b, mpTracker->mCurrentFrame.SVE_c};
+    // calculate overall visibility based on the three metrics per frame
+    mpTracker->mCurrentFrame.visibility = mpTracker->mCurrentFrame.SVE_a + mpTracker->mCurrentFrame.SVE_b + mpTracker->mCurrentFrame.SVE_c;
+    
+    // store all the total visibilities and the three metrics in a vector
+    std::vector<float> newRow = {mpTracker->mCurrentFrame.visibility, mpTracker->mCurrentFrame.SVE_a, mpTracker->mCurrentFrame.SVE_b, mpTracker->mCurrentFrame.SVE_c};
     vSVE.push_back(newRow);
+
+    // timestamps and visibility information are all written to a .txt file in System::SaveVisibilityStatistics()
+    /* ---------------------------*/ 
 
     return Tcw;
 }
@@ -509,11 +518,12 @@ void System::SaveVisibilityStatistics(const string &filename)
     for(size_t i=0; i<vSVE_t.size(); i++)
     {
         double timestamp = vSVE_t[i];
-        float SVE_a = vSVE[i][0];
-        float SVE_b = vSVE[i][1];
-        float SVE_c = vSVE[i][2];
+        float visibility = vSVE[i][0];
+        float SVE_a = vSVE[i][1];
+        float SVE_b = vSVE[i][2];
+        float SVE_c = vSVE[i][3];
 
-        f << setprecision(6) << timestamp << " " << setprecision(6) << SVE_a << " " << setprecision(6) << SVE_b << " " << setprecision(6) << SVE_c << endl;
+        f << setprecision(6) << timestamp << " " << setprecision(6) << visibility << " " << setprecision(6) << SVE_a << " " << setprecision(6) << SVE_b << " " << setprecision(6) << SVE_c << endl;
 
     }
 

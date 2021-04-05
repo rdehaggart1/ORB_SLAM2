@@ -297,9 +297,6 @@ void Frame::AssignFeaturesToGrid()
     // the b metric is then normalised to the 0-1 range by finding how close the distribution is to the worst-case scenario
     SVE_b = 1 - (chiSquared/worstCase);
     /* ---------------------------*/ 
-
-    /* ---------- <SVE> ---------- */
-    /* ---------------------------*/
 }
 
 void Frame::ExtractORB(int flag, const cv::Mat &im)

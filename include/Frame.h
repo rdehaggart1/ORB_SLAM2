@@ -132,8 +132,9 @@ public:
     // Number of KeyPoints.
     int N;
 
-    //<SVE> Scene Visibility Estimation
+    // <SVE> Scene Visibility Estimation
     int n_requestedFeatures;
+    float visibility;
     float SVE_a;
     float SVE_b;
     float SVE_c; 
