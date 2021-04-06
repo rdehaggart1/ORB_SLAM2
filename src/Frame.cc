@@ -251,7 +251,7 @@ void Frame::AssignFeaturesToGrid()
     // declare a binning array where we can count how many points are in each grid square in the image
     // the grid that original is using is very fine (~3000 squares), and we'd probably get 1 or 2 points per grid square
     // if we make the grid less fine, the efficiency should improve for the SVE part
-    int reductionFactor = 4;                                // reduce the number of rows from FRAME_GRID_ROWS to reductionFactor, same for cols
+    int reductionFactor = 2;                                // reduce the number of rows from FRAME_GRID_ROWS to reductionFactor, same for cols
     int SVEGridSquares = reductionFactor * reductionFactor; // so we now have a grid of reductionFactor*reductionFactor squares
     int gridBin[SVEGridSquares] = {0};                      // this is our binning array
     /* ---------------------------*/    
