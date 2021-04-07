@@ -227,7 +227,6 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
     // for every frame, we would like to know how visible the scene is. this can be based on a set of metrics relating to the extracted features
     
     // a: how many points have been extracted relative to the requested number?
-    n_requestedFeatures = mpORBextractorLeft->Getnfeatures();   // this should be calculated every time as it is double the request during initialisation
     SVE_a = N / float(mpORBextractorLeft->Getnfeatures());      // a is simply the ratio between the actual # of points and the 'maximum' # of points
 
     // b: how well distributed are these points in the frame?
@@ -251,7 +250,7 @@ void Frame::AssignFeaturesToGrid()
     // declare a binning array where we can count how many points are in each grid square in the image
     // the grid that original is using is very fine (~3000 squares), and we'd probably get 1 or 2 points per grid square
     // if we make the grid less fine, the efficiency should improve for the SVE part
-    int reductionFactor = 2;                                // reduce the number of rows from FRAME_GRID_ROWS to reductionFactor, same for cols
+    int reductionFactor = 8;                                // reduce the number of rows from FRAME_GRID_ROWS to reductionFactor, same for cols
     int SVEGridSquares = reductionFactor * reductionFactor; // so we now have a grid of reductionFactor*reductionFactor squares
     int gridBin[SVEGridSquares] = {0};                      // this is our binning array
     /* ---------------------------*/    
@@ -272,7 +271,7 @@ void Frame::AssignFeaturesToGrid()
             // find the index of this square (i.e. 0,0 is square 0, 2,1 is square (numCols * 2 + 1), etc.) based on the reduction
             int squareIdx = (largeGridPosY * reductionFactor) + largeGridPosX;
             // then bin the points by square index so we know how many points are in each grid square        
-            gridBin[squareIdx]++;       
+            gridBin[squareIdx]++;    
             /* ---------------------------*/ 
 
             mGrid[nGridPosX][nGridPosY].push_back(i);
@@ -288,14 +287,21 @@ void Frame::AssignFeaturesToGrid()
     
     // the best chi-squared value is 0 (distribution fits perfectly with expectation)
     // the worst chi-squared value corresponds to every bin empty, except for 1 that contains all the points
-    float worstCase = (expectedPoints * (SVEGridSquares - 1)) + ((float(N) - expectedPoints) * (float(N) - expectedPoints)) / (expectedPoints);
+    //float worstCase = (expectedPoints * (SVEGridSquares - 1)) + ((float(N) - expectedPoints) * (float(N) - expectedPoints)) / (expectedPoints);
+
+    float worstCase = (expectedPoints * float(0.5 * reductionFactor * reductionFactor)) + (float(0.5 * reductionFactor * reductionFactor)/expectedPoints) * ((float(N) / (0.5 * reductionFactor * reductionFactor)) - expectedPoints) * ((float(N) / (0.5 * reductionFactor * reductionFactor)) - expectedPoints);
 
     for(int i=0;i<SVEGridSquares;i++){
         chiSquared += ((gridBin[i] - expectedPoints)*(gridBin[i] - expectedPoints))/expectedPoints;  
     }
     
+    cout << "x2: " << chiSquared << endl;
+
     // the b metric is then normalised to the 0-1 range by finding how close the distribution is to the worst-case scenario
     SVE_b = 1 - (chiSquared/worstCase);
+
+    cout << "wc: " << worstCase << endl;
+    cout << "b: " << SVE_b << endl;
     /* ---------------------------*/ 
 }
 

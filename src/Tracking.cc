@@ -962,8 +962,8 @@ bool Tracking::TrackLocalMap()
         }
     }
     
-    // <SVE> tell the frame how many points it is tracking from the local map relative to how many features it has extracted in total
-    mCurrentFrame.SVE_c = float(mnMatchesInliers)/float(mCurrentFrame.N);
+    // <SVE> tell the frame how many points it is tracking from the local map relative to how many of the local map points should be visible to this frame
+    mCurrentFrame.SVE_c = float(mnMatchesInliers)/float(mapPointsInFrustum);
 
     // Decide if the tracking was succesful
     // More restrictive if there was a relocalization recently
@@ -1193,6 +1193,9 @@ void Tracking::SearchLocalPoints()
             th=5;
         matcher.SearchByProjection(mCurrentFrame,mvpLocalMapPoints,th);
     }
+    
+    // <SVE> save the number of map points that should be within view of the frame
+    mapPointsInFrustum = nToMatch;
 }
 
 void Tracking::UpdateLocalMap()

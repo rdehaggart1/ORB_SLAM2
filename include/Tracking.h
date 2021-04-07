@@ -202,6 +202,9 @@ protected:
     //Current matches in frame
     int mnMatchesInliers;
 
+    // <SVE> the number of map points that are in view of the current frame
+    int mapPointsInFrustum;
+
     //Last Frame, KeyFrame and Relocalisation Info
     KeyFrame* mpLastKeyFrame;
     Frame mLastFrame;

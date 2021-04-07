@@ -133,7 +133,6 @@ public:
     int N;
 
     // <SVE> Scene Visibility Estimation
-    int n_requestedFeatures;
     float visibility;
     float SVE_a;
     float SVE_b;
