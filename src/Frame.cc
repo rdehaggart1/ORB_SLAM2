@@ -287,21 +287,16 @@ void Frame::AssignFeaturesToGrid()
     
     // the best chi-squared value is 0 (distribution fits perfectly with expectation)
     // the worst chi-squared value corresponds to every bin empty, except for 1 that contains all the points
-    //float worstCase = (expectedPoints * (SVEGridSquares - 1)) + ((float(N) - expectedPoints) * (float(N) - expectedPoints)) / (expectedPoints);
+        // however, as number of bins increases, the sensitivity of this would become very small due to the probability of all N points fitting within an area of ecreasing size. Worst case is therefore instead treated as the case in which all extracted points are within half of the bins.
 
     float worstCase = (expectedPoints * float(0.5 * reductionFactor * reductionFactor)) + (float(0.5 * reductionFactor * reductionFactor)/expectedPoints) * ((float(N) / (0.5 * reductionFactor * reductionFactor)) - expectedPoints) * ((float(N) / (0.5 * reductionFactor * reductionFactor)) - expectedPoints);
 
     for(int i=0;i<SVEGridSquares;i++){
         chiSquared += ((gridBin[i] - expectedPoints)*(gridBin[i] - expectedPoints))/expectedPoints;  
     }
-    
-    cout << "x2: " << chiSquared << endl;
 
     // the b metric is then normalised to the 0-1 range by finding how close the distribution is to the worst-case scenario
     SVE_b = 1 - (chiSquared/worstCase);
-
-    cout << "wc: " << worstCase << endl;
-    cout << "b: " << SVE_b << endl;
     /* ---------------------------*/ 
 }
 
