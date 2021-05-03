@@ -5,6 +5,8 @@ The modifications were made in support of my final year research project in part
 
 The full repository containing supplementary code for dataset packaging and processing is located [here](https://github.com/rdehaggart1/sceneVisibilityInSLAM)
 
+NOTE: A monocular VI-SLAM version of this repository is available via a modified ORB-SLAM3, though throughout testing it became obvious that due to the relative age of ORB-SLAM3, it is still suffering from some serious bugs. ([ORB-SLAM3](https://github.com/UZ-SLAMLab/ORB_SLAM3), [ORB-SLAM3 SVE](https://github.com/rdehaggart1/ORB_SLAM3_SVE))
+
 # 1. Original Authors and Decription
 
 **Authors:** [Raul Mur-Artal](http://webdiis.unizar.es/~raulmur/), [Juan D. Tardos](http://webdiis.unizar.es/~jdtardos/), [J. M. M. Montiel](http://webdiis.unizar.es/~josemari/) and [Dorian Galvez-Lopez](http://doriangalvez.com/) ([DBoW2](https://github.com/dorian3d/DBoW2))
