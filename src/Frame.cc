@@ -223,7 +223,7 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
 
     mb = mbf/fx;
 
-    /* <SVE> SCENE VISIBILITY ESTIMATION */
+    /* ---------- <SVE> ---------- */
     // for every frame, we would like to know how visible the scene is. this can be based on a set of metrics relating to the extracted features
     
     // a: how many points have been extracted relative to the requested number?
@@ -235,6 +235,7 @@ Frame::Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extra
     // c: how many of these points have been tracked (i.e. belong to the local map)?
     // c is contained in 'Tracking.cc' where the calculation trackedPoints/totalPoints is performed.
         // if all points in the frame were already in the local map, they've all been tracked so c=1
+    /* --------------------------- */
 
     AssignFeaturesToGrid();
 }
@@ -287,9 +288,12 @@ void Frame::AssignFeaturesToGrid()
     
     // the best chi-squared value is 0 (distribution fits perfectly with expectation)
     // the worst chi-squared value corresponds to every bin empty, except for 1 that contains all the points
-        // however, as number of bins increases, the sensitivity of this would become very small due to the probability of all N points fitting within an area of ecreasing size. Worst case is therefore instead treated as the case in which all extracted points are within half of the bins.
+        // however, as number of bins increases, the sensitivity of this would become very small due to the probability of all N points fitting within an area of decreasing size. Worst case is therefore instead treated as the case in which all extracted points are within some larger fraction of the frame.
+    
+    // scale the full frame area by this factor to give the worst case. e.g. if this value is 1/2, then the worst case is when all points lie within 1/2 of the total frame area.
+    float worstCaseAreaScale = 0.125;
 
-    float worstCase = (expectedPoints * float(0.5 * reductionFactor * reductionFactor)) + (float(0.5 * reductionFactor * reductionFactor)/expectedPoints) * ((float(N) / (0.5 * reductionFactor * reductionFactor)) - expectedPoints) * ((float(N) / (0.5 * reductionFactor * reductionFactor)) - expectedPoints);
+    float worstCase = (expectedPoints * float((1-worstCaseAreaScale) * reductionFactor * reductionFactor)) + (float(worstCaseAreaScale * reductionFactor * reductionFactor)/expectedPoints) * ((float(N) / (worstCaseAreaScale * reductionFactor * reductionFactor)) - expectedPoints) * ((float(N) / (worstCaseAreaScale * reductionFactor * reductionFactor)) - expectedPoints);
 
     for(int i=0;i<SVEGridSquares;i++){
         chiSquared += ((gridBin[i] - expectedPoints)*(gridBin[i] - expectedPoints))/expectedPoints;  

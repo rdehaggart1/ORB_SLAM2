@@ -4,19 +4,32 @@
 # Camera Parameters. Adjust them!
 #--------------------------------------------------------------------------------------------
 
-# Camera calibration and distortion parameters (OpenCV) 
-Camera.fx: 523.9029710189141
-Camera.fy: 525.1280072288679
-Camera.cx: 318.07353454990124
-Camera.cy: 234.2647175281021
+# the midair dataset is synthetic and the camera is an 'ideal' pinhole. therefore the distortion can be zeroed.
+# using the pinhole calculator at https://www.mrpinhole.com/calcpinh.php, we work out that for a field of view of 90deg as is specified by the creators,
+# the focal length is 30mm.
+# the camera matrix requires the focal length in pixels
+# (F(mm) * ImageWidth (pixel)) / SensorWidth (mm) = F(pixels)
+# (30 * 1024) / SensorWidth (mm) = F (pxl)
+# sensor width is unknown, but the formula for the pinhole diameter to get the sharpest image at a given focal length is d = 2 * root(f * lambda)
+# use yellow light wavelength (500nm) to give d = 0.245mm
+# therefore the focal length in pixels is (30 * 1024) / 0.245 = 125387
 
-Camera.k1: 0.03233959506421442
-Camera.k2: -0.12483600171515911
-Camera.p1: -0.0008630695905382894
-Camera.p2: 0.0017460183154471157
+# ^ wow I was off! see FAQ: https://midair.ulg.ac.be/faq.html 
+# they tell us that the focal length is = h/2 = w/2 = 1024 / 2 = 512 pixels
+
+# Camera calibration and distortion parameters (OpenCV) 
+Camera.fx: 600
+Camera.fy: 600
+Camera.cx: 320
+Camera.cy: 240
+
+Camera.k1: 0
+Camera.k2: 0
+Camera.p1: 0
+Camera.p2: 0
 
 # Camera frames per second 
-Camera.fps: 30.0
+Camera.fps: 25.0
 
 # Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
 Camera.RGB: 1
@@ -26,7 +39,7 @@ Camera.RGB: 1
 #--------------------------------------------------------------------------------------------
 
 # ORB Extractor: Number of features per image
-ORBextractor.nFeatures: 1500
+ORBextractor.nFeatures: 2000
 
 # ORB Extractor: Scale factor between levels in the scale pyramid 	
 ORBextractor.scaleFactor: 1.2

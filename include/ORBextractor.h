@@ -63,9 +63,11 @@ public:
     int inline GetLevels(){
         return nlevels;}
     
-    // <VIS> return the maximum number of features that we want to match in this frame
+    /* ---------- <SVE> ---------- */ 
+    // return the maximum number of features that we want to match in this frame
     int inline Getnfeatures(){
         return nfeatures;}
+    /* --------------------------- */
 
     float inline GetScaleFactor(){
         return scaleFactor;}
