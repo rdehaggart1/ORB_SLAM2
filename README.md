@@ -18,6 +18,7 @@ Please see the [original ORB-SLAM2 repository](https://github.com/raulmur/ORB_SL
 # 3. Modifications
 
 The set modifications made to the original source code in support of this project is described below:
+
 <i>Frame.cc</i>
 - Calculate SVE_a by dividing the number of extracted features by the user-defined maximum.
 - Calculate SVE_b by segmenting each frame into a number of bins, and counting the number of features extracted in each. Use this distribution to calculate the chi-square histogram distribution statistic against a homogenous distribution of points.
